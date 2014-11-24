@@ -13,30 +13,18 @@ defmodule Blacksmith do
         new unquote(options), overrides
       end
       
-      def unquote(saved_name name)(repo, overrides \\ %{}) do
+      def unquote(:"saved_#{name}")(repo, overrides \\ %{}) do
         new_saved repo, unquote(options), overrides
       end
       
-      def unquote(list_name name)(number_of_records, overrides \\ %{}) do
-        new_list number_of_records, fn -> unquote(options) end, overrides
+      def unquote(:"#{name}_list")(number_of_records, overrides \\ %{}) do
+        new_list( number_of_records, fn -> unquote(options) end, overrides )
       end
       
-      def unquote(saved_list_name name)(repo, number_of_records, overrides  \\ %{}) do
-        new_saved_list repo, number_of_records, unquote(options), overrides
+      def unquote(:"saved_#{name}_list")(repo, number_of_records, overrides  \\ %{}) do
+        new_saved_list( repo, number_of_records, fn -> unquote(options) end, overrides )
       end
     end
-  end
-  
-  defp saved_name(name) do
-    String.to_atom "saved_#{name}"
-  end
-  
-  defp list_name(name) do
-    String.to_atom "#{name}_list"
-  end
-  
-  defp saved_list_name(name) do
-    saved_name list_name(name)
   end
   
   def new([type: :blacksmith, prototype: prototype]=attributes, overrides) do
@@ -51,8 +39,8 @@ defmodule Blacksmith do
   def new(attributes, overrides) do
     stripped_attributes = Dict.delete( attributes, :type ) 
 
-     %{}
-     |> Dict.merge( stripped_attributes )
+    %{}
+    |> Dict.merge( stripped_attributes )
     |> Dict.merge( overrides )
   end
   
@@ -70,7 +58,7 @@ defmodule Blacksmith do
   end
   
   def new_saved_list(repo, number_of_records, attributes, overrides) do
-    Blacksmith.config.save_all(repo, new_list(number_of_records, attributes, overrides))
+    Blacksmith.Config.save_all(repo, new_list(number_of_records, attributes, overrides))
   end
   
 end

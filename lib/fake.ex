@@ -31,8 +31,6 @@ defmodule Blacksmith.Fake do
 
   def start_link do
     Agent.start_link(fn ->
-      seed = Application.get_env(:ex_unit, :seed)
-      :random.seed(seed, seed, seed)
 
       Enum.reduce(@data, %{}, fn
         {k, _}, map when k in @not_unique -> map
