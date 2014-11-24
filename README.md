@@ -3,15 +3,20 @@ blacksmith
 
 Data generation framework for Elixir. 
 
-In testing, sometimes it's useful to create structs or saved records. Blacksmith makes it easy. 
-
+In testing, sometimes it's useful to create records in the form of maps. Blacksmith makes it easy. 
 
 
 First, install Blacksmith:
-...
+
+Right now, you'll use mix with a git dependency. In your mix.exs file, add the blacksmith dependency:
+
+~~~elixir
+def deps do
+  [{:blacksmith, git: "git://github.com/batate/blacksmith.git"}]
+end
+~~~
 
 Next, tell Blacksmith how to save one record, or many records:
-
 
 ~~~elixir
 defmodule do Blacksmith.Config
@@ -34,8 +39,8 @@ defmodule Blacksmith.Forge do
 
   # This will create a struct of User
   register :user, 
-    name: fake(:name),                # use the igar/faker framework
-    type: :struct, 
+    name: Fake.name,          
+    type: :map, 
     email: fake(:email), 
     description: fake(:sentence, 2..5), 
     roles: [], 
@@ -43,15 +48,9 @@ defmodule Blacksmith.Forge do
     
   # this will create a user with roles set to [:admin]
   register :admin, 
-    type: :blacksmith_user,
+    type: :blacksmith, 
+    prototype: user,
     roles: ["admin"]
-  
-  register :company, 
-    subdomain: &( "subdomain#{Blacksmith.unique_id}" )    # creates a unique subdomain, 
-    name: fake(:sentence, 4..10)
-    # picks up blacksmith default type
-
-
 end
 
 ~~~
@@ -59,32 +58,33 @@ end
 Now you can create a user, generating all of the default values:
 
 ~~~elixir
-  user = Blacksmith.user
+  user = Forge.user
 ~~~
 
 or a saved user:
 
 ~~~elixir
-  user = Blacksmith.saved_user Models.User, name: "Will Override"
+  user = Forge.saved_user Models.User, name: "Will Override"
 ~~~
 
-or a list of users
+or a list of 5 users
 
 ~~~elixir
-  user = Blacksmith.
+  user = Forge.user_list 5
 ~~~
 
 or a saved list of 5 admins
 
 ~~~elixir
-  admin = Blacksmith.saved_admin_list repo, 5
+  admin = Forge.saved_admin_list repo, 5
 ~~~
 
 
-You can create a list using a few common data elements:
+Next release: Create a list using a few common data elements:
 
 ~~~elixir
-  Blacksmith.having survey_id: Blacksmith.survey.id, author: Blacksmith.user do
-    question = Blacksmith.question   # will share the same survey id and user from above
+  Forge.having survey_id: some_survey.id, author: Forge.user do
+    question = Forge.question   # will share the same survey id and user from above
   end
-  
+~~~
+
