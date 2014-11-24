@@ -30,7 +30,7 @@ defmodule do Blacksmith.Config
 end
 ~~~
 
-Next, perhaps in test_helper, register each of your new models with Forge:
+Next, perhaps in test_helper for convenience or somewhere in lib for speed, register each of your new models with Forge:
 
 ~~~elixir
 defmodule Forge do
