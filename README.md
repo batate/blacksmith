@@ -21,28 +21,28 @@ Next, tell Blacksmith how to save one record, or many records:
 ~~~elixir
 defmodule do Blacksmith.Config
   def save(repo, model) do
-    model |> save
+    repo |> save( model )
   end
   
   def save_all(repo, list_of_models) do
-    list_of_models |> save_all
+    repo |> save_all( list_of_models )
   end
 end
 ~~~
 
-Next, register each of your new models with Forge:
+Next, perhaps in test_helper for convenience or somewhere in lib for speed, register each of your new models with Forge:
 
 ~~~elixir
-defmodule Blacksmith.Forge do
-
-  @default_type :struct       # :struct or :map
-
-  # This will create a struct of User
+defmodule Forge do
+  use Blacksmith
+  alias Blacksmith.fake
+  
+  
   register :user, 
     name: Fake.name,          
     type: :map, 
-    email: fake(:email), 
-    description: fake(:sentence, 2..5), 
+    email: Fake.email, 
+    description: Fake.sentence, 
     roles: [], 
     always_the_same: "string"
     
@@ -61,10 +61,10 @@ Now you can create a user, generating all of the default values:
   user = Forge.user
 ~~~
 
-or a saved user:
+or a saved user, with the name attribute overridden, and a new attribute of favorite_language:
 
 ~~~elixir
-  user = Forge.saved_user Models.User, name: "Will Override"
+  user = Forge.saved_user Models.User, name: "Will Override", favorite_language: "Elixir"
 ~~~
 
 or a list of 5 users
