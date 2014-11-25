@@ -78,8 +78,7 @@ or a saved list of 5 admins
   admin = Forge.saved_admin_list repo, 5
 ~~~
 
-
-Next release: Create a list using a few common data elements:
+Create a list using a few common data elements:
 
 ~~~elixir
   Forge.having survey_id: some_survey.id, author: Forge.user do
@@ -87,3 +86,4 @@ Next release: Create a list using a few common data elements:
   end
 ~~~
 
+Next release: allow nesting of having blacks. 
