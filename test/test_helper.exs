@@ -1,12 +1,11 @@
-ExUnit.start()
+ExUnit.start(formatters: [ShouldI.CLIFormatter])
 Blacksmith.Fake.start_link()
-
 defmodule Forge do
   use Blacksmith
   alias Blacksmith.Fake
   
   register :user, 
-    name: "Bilbo", 
+    name: "John Henry", 
     email: Fake.email, 
     password: Fake.password
   

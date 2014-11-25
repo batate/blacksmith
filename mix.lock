@@ -1,3 +1,3 @@
 %{"faker": {:git, "https://github.com/igas/faker.git", "b352ea8254ddf3185ce2839f91c862605e8a0498", []},
   "poison": {:hex, :poison, "1.1.1"},
-  "shouldi": {:hex, :shouldi, "0.2.0"}}
+  "shouldi": {:hex, :shouldi, "0.2.1"}}

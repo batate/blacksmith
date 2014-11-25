@@ -2,6 +2,7 @@ defmodule BlacksmithTest do
   use ExUnit.Case
   use ShouldI, async: true
   import ShouldI.Matchers.Context
+  require Forge
 
   with "a direct map and a prototype" do
     setup context do
@@ -15,6 +16,42 @@ defmodule BlacksmithTest do
     should_match_key user: %{name: _}
     should_match_key user_list: [%{name: _}|_]
   end
+  
+  with "optional args" do
+    setup context do
+      assign context, 
+        user: Forge.user( job: "Iron worker" ),
+        extra_arg_user: Forge.user( job: "Iron worker", job: "Steel driver" )
+    end
+    
+    should_match_key user: %{job: "Iron worker"}
+    should_match_key extra_arg_user: %{job: "Steel driver"}
+  end
+  
+  with "having args" do
+    setup context do
+      Forge.having job: "Steel driver" do
+        assign context, 
+          user: Forge.user
+      end
+    end
+    
+    should_match_key user: %{job: "Steel driver"}
+  end
+  
+  # with "nested having args" do
+  #   setup context do
+  #     Forge.having( tool: "hammer" ) do
+  #       Forge.having( job: "Steel driver" ) do
+  #         assign context, 
+  #           user: Forge.user
+  #       end
+  #     end
+  #   end
+  #   
+  #   should_match_key user: %{job: "Steel driver"}
+  #   should_match_key user: %{tool: "hammer"}
+  # end
   
   with "a persistent user and a persistent user list" do
     setup context do
