@@ -17,7 +17,8 @@ defmodule Blacksmith.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :faker],
+      env: [locale: :en]]
   end
   
   defp package do
@@ -27,6 +28,7 @@ defmodule Blacksmith.Mixfile do
   end
   
   defp deps do
-    [ {:shouldi, env: :test} ]
+    [ {:shouldi, env: :test}, 
+      {:faker, "~> 0.4.0"} ]
   end
 end

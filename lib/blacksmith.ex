@@ -21,7 +21,6 @@ defmodule Blacksmith do
             ast ->
               ast
           end)
-          IO.inspect __CALLER__.vars
         quote do
           opts_var = unquote( Blacksmith.append_opts( __MODULE__, ( Dict.has_key? __CALLER__.vars, :opts_var ), opts) )
           unquote(block)
@@ -38,7 +37,6 @@ defmodule Blacksmith do
   end
 
   def append_opts(_, false, new_opts) do
-    IO.puts "Interior: new_opts is #{inspect new_opts}"
     new_opts
   end
   

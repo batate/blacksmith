@@ -30,19 +30,18 @@ defmodule do Blacksmith.Config
 end
 ~~~
 
-Next, perhaps in test_helper for convenience or somewhere in lib for speed, register each of your new models with Forge:
+Next, perhaps in test_helper for convenience or somewhere in lib for speed, register each of your new models with Forge. Use `Faker` for fake values:
 
 ~~~elixir
 defmodule Forge do
   use Blacksmith
-  alias Blacksmith.fake
   
   
   register :user, 
-    name: Fake.name,          
+    name: Faker.Name.first_name,          
     type: :map, 
-    email: Fake.email, 
-    description: Fake.sentence, 
+    email: Faker.Internet.email, 
+    description: Faker.Lorem.sentence, 
     roles: [], 
     always_the_same: "string"
     
