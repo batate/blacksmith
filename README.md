@@ -16,6 +16,17 @@ def deps do
 end
 ~~~
 
+To use [Faker](https://github.com/igas/faker) to generate fake data you will also have to add `:faker` or `:blacksmith` to your application list:
+
+~~~elixir
+def application do
+  [applications: applications(Mix.env)]
+end
+
+defp applications(:test), do: applications(:all) ++ [:blacksmith]
+defp applications(_all),  do: [:logger]
+~~~
+
 Next, tell Blacksmith how to save one record, or many records:
 
 ~~~elixir
