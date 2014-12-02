@@ -6,7 +6,7 @@ defmodule Forge do
 
   register :user, 
     name: "John Henry", 
-    email: Faker.Internet.email
+    email: Sequence.next(:email, &"jh#{&1}@example.com")
   
   register :admin, 
     type: :blacksmith, 

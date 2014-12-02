@@ -16,7 +16,7 @@ def deps do
 end
 ~~~
 
-To use [Faker](https://github.com/igas/faker) to generate fake data you will also have to add `:faker` or `:blacksmith` to your application list:
+You will also have to add `:blacksmith` to your application list:
 
 ~~~elixir
 def application do
@@ -51,7 +51,7 @@ defmodule Forge do
   register :user, 
     name: Faker.Name.first_name,          
     type: :map, 
-    email: Faker.Internet.email, 
+    email: Sequence.next(:email, &"test#{&1}@example.com"),
     description: Faker.Lorem.sentence, 
     roles: [], 
     always_the_same: "string"
