@@ -2,6 +2,7 @@ defmodule Blacksmith do
   defmacro __using__(_) do
     quote do
       import Blacksmith
+      alias Blacksmith.Sequence
       @default_type :struct
       
       @new_function &Blacksmith.new/2

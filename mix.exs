@@ -18,6 +18,7 @@ defmodule Blacksmith.Mixfile do
 
   def application do
     [applications: [:logger, :faker],
+      mod: {Blacksmith.App, []},
       env: [locale: :en]]
   end
   
