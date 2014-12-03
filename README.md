@@ -1,10 +1,9 @@
 blacksmith
 ==========
 
-Data generation framework for Elixir. 
+Data generation framework for Elixir.
 
-In testing, sometimes it's useful to create records in the form of maps. Blacksmith makes it easy. 
-
+In testing, sometimes it's useful to create records in the form of maps. Blacksmith makes it easy.
 
 First, install Blacksmith:
 
@@ -23,35 +22,34 @@ defmodule do Blacksmith.Config
   def save(repo, model) do
     repo |> save( model )
   end
-  
+
   def save_all(repo, list_of_models) do
     repo |> save_all( list_of_models )
   end
 end
 ~~~
 
-Next, perhaps in test_helper for convenience or somewhere in lib for speed, register each of your new models with Forge. Use `Faker` for fake values:
+Next, perhaps in test_helper for convenience or somewhere in lib for speed, register each of your new models with Forge. Use [Faker](https://github.com/igas/faker) for fake values:
 
 ~~~elixir
 defmodule Forge do
   use Blacksmith
-  
-  
-  register :user, 
-    name: Faker.Name.first_name,          
-    type: :map, 
-    email: Faker.Internet.email, 
-    description: Faker.Lorem.sentence, 
-    roles: [], 
+
+
+  register :user,
+    name: Faker.Name.first_name,
+    type: :map,
+    email: Faker.Internet.email,
+    description: Faker.Lorem.sentence,
+    roles: [],
     always_the_same: "string"
-    
+
   # this will create a user with roles set to [:admin]
-  register :admin, 
-    type: :blacksmith, 
+  register :admin,
+    type: :blacksmith,
     prototype: user,
     roles: ["admin"]
 end
-
 ~~~
 
 Now you can create a user, generating all of the default values:
@@ -86,4 +84,4 @@ Create a list using a few common data elements:
   end
 ~~~
 
-Next release: allow nesting of having blacks. 
+Next release: allow nesting of having blacks.
