@@ -93,4 +93,51 @@ Create a list using a few common data elements:
   end
 ~~~
 
-Next release: allow nesting of having blacks.
+Next release: allow nesting of having blocks.
+
+## Using with Ecto
+
+Blacksmith can be easily with a database persistance library such as Ecto.
+
+~~~elixir
+defmodule User do
+  use Ecto.Model
+  
+  schema "users" do
+    field :name, :string
+    field :email, :string
+  end
+end
+~~~
+
+The `@save_one_function` and `@save_all_function` attributes are used to delegate to your persistence layer. We delegate to `Blacksmith.Config` defined below. You'll also notice we added that we added the `__struct__` field to `register :user`, that's because Ecto works with models built on structs instead of plain maps.
+
+~~~elixir
+defmodule Forge do
+  use Blacksmith
+  
+  @save_one_function &Blacksmith.Config.save/2
+  @save_all_function &Blacksmith.Config.save_all/2
+
+  register :user,
+    __struct__: User,
+    name: "John Henry", 
+    email: Sequence.next(:email, &"jh#{&1}@example.com")
+end
+~~~
+
+`Blacksmith.Config` defines the callback functions that delegate to the Ecto repository for persistence.
+
+~~~elixir
+defmodule Blacksmith.Config do
+  def save(repo, map) do
+    repo.insert(map)
+  end
+  
+  def save_all(repo, list) do
+    Enum.map(list, &repo.insert/1)
+  end
+end
+~~~
+
+`Forge.saved_user(MyRepo)` will generate a `User` model that have been inserted in the database backed by `MyRepo`.
