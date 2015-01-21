@@ -4,8 +4,8 @@ defmodule Blacksmith.Mixfile do
   def project do
     [ app: :blacksmith,
       version: "0.1.0",
-      elixir: "~> 1.0.0",
-      deps: deps, 
+      elixir: "~> 1.0",
+      deps: deps,
       name: "Blacksmith",
       source_url: "https://github.com/batate/blacksmith",
       docs: fn ->
@@ -21,15 +21,15 @@ defmodule Blacksmith.Mixfile do
       mod: {Blacksmith.App, []},
       env: [locale: :en]]
   end
-  
+
   defp package do
     [contributors: ["Bruce Tate", "Eric Meadows-Jönsson"],
      licenses: ["Apache 2.0"],
      links: %{"Github" => "https://github.com/batate/blacksmith"}]
   end
-  
+
   defp deps do
-    [ {:shouldi, env: :test}, 
+    [ {:shouldi, env: :test},
       {:faker, "~> 0.4.0"} ]
   end
 end

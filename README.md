@@ -47,7 +47,6 @@ defmodule Forge do
   use Blacksmith
   register :user,
     name: Faker.Name.first_name,
-    type: :map,
     email: Sequence.next(:email, &"test#{&1}@example.com"),
     description: Faker.Lorem.sentence,
     roles: [],
@@ -55,8 +54,7 @@ defmodule Forge do
 
   # this will create a user with roles set to [:admin]
   register :admin,
-    type: :blacksmith,
-    prototype: user,
+    [prototype: user],
     roles: ["admin"]
 end
 ~~~
@@ -102,7 +100,7 @@ Blacksmith can be easily with a database persistance library such as Ecto.
 ~~~elixir
 defmodule User do
   use Ecto.Model
-  
+
   schema "users" do
     field :name, :string
     field :email, :string
@@ -115,13 +113,13 @@ The `@save_one_function` and `@save_all_function` attributes are used to delegat
 ~~~elixir
 defmodule Forge do
   use Blacksmith
-  
+
   @save_one_function &Blacksmith.Config.save/2
   @save_all_function &Blacksmith.Config.save_all/2
 
   register :user,
     __struct__: User,
-    name: "John Henry", 
+    name: "John Henry",
     email: Sequence.next(:email, &"jh#{&1}@example.com")
 end
 ~~~
@@ -133,7 +131,7 @@ defmodule Blacksmith.Config do
   def save(repo, map) do
     repo.insert(map)
   end
-  
+
   def save_all(repo, list) do
     Enum.map(list, &repo.insert/1)
   end

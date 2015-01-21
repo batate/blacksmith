@@ -4,13 +4,12 @@ defmodule Forge do
   @save_one_function &Blacksmith.Config.save/2
   @save_all_function &Blacksmith.Config.save_all/2
 
-  register :user, 
-    name: "John Henry", 
+  register :user,
+    name: "John Henry",
     email: Sequence.next(:email, &"jh#{&1}@example.com")
-  
-  register :admin, 
-    type: :blacksmith, 
-    prototype: :user, 
+
+  register :admin,
+    [prototype: :user],
     roles: ["admin"]
 end
 
@@ -19,8 +18,8 @@ defmodule JsonForge do
 
   @new_function &Blacksmith.Config.new_json/2
 
-  register :user, 
-    name: "John Henry", 
+  register :user,
+    name: "John Henry",
     email: Faker.Internet.email
 end
 
@@ -34,5 +33,5 @@ defmodule Blacksmith.Config do
     |> Dict.merge( overrides )
     |> Poison.Encoder.encode([])
   end
-  
+
 end
