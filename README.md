@@ -95,7 +95,7 @@ Next release: allow nesting of having blocks.
 
 ## Using with Ecto
 
-Blacksmith can be easily with a database persistance library such as Ecto.
+Blacksmith can be used easily with a database persistance library such as Ecto.
 
 ~~~elixir
 defmodule User do
@@ -108,7 +108,7 @@ defmodule User do
 end
 ~~~
 
-The `@save_one_function` and `@save_all_function` attributes are used to delegate to your persistence layer. We delegate to `Blacksmith.Config` defined below. You'll also notice we added that we added the `__struct__` field to `register :user`, that's because Ecto works with models built on structs instead of plain maps.
+The `@save_one_function` and `@save_all_function` attributes are used to delegate to your persistence layer. We delegate to `Blacksmith.Config` defined below. You'll also notice that we added the `__struct__` field to `register :user`, that's because Ecto works with models built on structs instead of plain maps.
 
 ~~~elixir
 defmodule Forge do
