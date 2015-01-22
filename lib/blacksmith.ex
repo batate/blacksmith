@@ -87,9 +87,17 @@ defmodule Blacksmith do
       map = %{}
     end
 
-    map
-    |> Dict.merge(attributes)
-    |> Dict.merge(overrides)
+    map = map
+          |> Map.merge(to_map(attributes))
+          |> Map.merge(to_map(overrides))
+
+    case Map.fetch(map, :__struct__) do
+      {:ok, struct} ->
+        map = Map.delete(map, :__struct__)
+        struct(struct, map)
+      :error ->
+        map
+    end
   end
 
   def new_saved(repo, attributes, overrides, module, opts, save_function, new_function) do
@@ -108,4 +116,9 @@ defmodule Blacksmith do
   def new_saved_list(_repo, _list) do
     raise "Save not configured. See readme.md for details. "
   end
+
+  def to_map(list) when is_list(list),
+    do: Enum.into(list, %{})
+  def to_map(map) when is_map(map),
+    do: map
 end
