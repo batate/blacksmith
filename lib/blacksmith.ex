@@ -93,8 +93,8 @@ defmodule Blacksmith do
   end
 
   def new_saved(repo, attributes, overrides, module, opts, save_function, new_function) do
-    new_function.(attributes, overrides, module, opts)
-    |> save_function.( repo )
+    model = new_function.(attributes, overrides, module, opts)
+    save_function.(repo, model)
   end
 
   def saved(_map, _repo) do
