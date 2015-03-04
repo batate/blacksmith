@@ -31,12 +31,16 @@ defmodule BlacksmithTest do
   with "having args" do
     setup context do
       Forge.having job: "Steel driver" do
-        assign context,
-          user: Forge.user
+        context = assign context, user1: Forge.user
+      end
+
+      Forge.having city: "Austin" do
+        assign context, user2: Forge.user
       end
     end
 
-    should_match_key user: %{job: "Steel driver"}
+    should_match_key user1: %{job: "Steel driver"}
+    should_match_key user2: %{city: "Austin"}
   end
 
   # with "nested having args" do

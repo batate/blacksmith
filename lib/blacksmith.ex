@@ -26,19 +26,23 @@ defmodule Blacksmith do
             ast ->
               ast
           end)
+
+        var_defined? = {:opts_var, __MODULE__} in __CALLER__.vars
+        opts = Blacksmith.append_opts(opts_var, var_defined?, opts)
+
         quote do
-          opts_var = unquote( Blacksmith.append_opts( __MODULE__, ( Dict.has_key? __CALLER__.vars, :opts_var ), opts) )
-          unquote(block)
+          opts_var = unquote(opts)
+          context = unquote(block)
+          opts_var = []
+          context
         end
       end
 
     end
   end
 
-  def append_opts(module, true, new_opts) do
-    quote do
-      unquote(Macro.var(:opts_var, module)) ++ unquote(new_opts)
-    end
+  def append_opts(opts_var, true, new_opts) do
+    quote do: unquote(opts_var) ++ unquote(new_opts)
   end
 
   def append_opts(_, false, new_opts) do
