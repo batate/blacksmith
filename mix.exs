@@ -29,7 +29,7 @@ defmodule Blacksmith.Mixfile do
   end
 
   defp deps do
-    [{:faker, "~> 0.4.0"},
+    [{:faker, "~> 0.5"},
      {:ex_doc, only: :dev},
      {:earmark, only: :dev},
      {:shouldi, only: :test}]
