@@ -1,4 +1,4 @@
-blacksmith
+Blacksmith
 ==========
 
 Data generation framework for Elixir.
@@ -7,11 +7,11 @@ In testing, sometimes it's useful to create records in the form of maps. Blacksm
 
 First, install Blacksmith:
 
-Right now, you'll use mix with a git dependency. In your mix.exs file, add the blacksmith dependency:
+In your mix.exs file, add the blacksmith dependency:
 
 ~~~elixir
 def deps do
-  [{:blacksmith, git: "git://github.com/batate/blacksmith.git"}]
+  [{:blacksmith, "~> 0.1"}]
 end
 ~~~
 
