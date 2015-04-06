@@ -15,6 +15,11 @@ defmodule BlacksmithTest do
     should_have_key :user_list
     should_match_key user: %{name: _}
     should_match_key user_list: [%{name: _}|_]
+
+    should "create different users", context do
+      [user1, user2] = context.user_list
+      assert user1.email != user2.email
+    end
   end
 
   with "optional args" do

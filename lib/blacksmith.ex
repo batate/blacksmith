@@ -50,30 +50,41 @@ defmodule Blacksmith do
   end
 
   defmacro register(name, opts \\ [], fields) do
+    name_attributes = :"#{name}_attributes"
+    name_opts = :"#{name}_opts"
+
     quote do
+      def unquote(name_attributes)() do
+        unquote(fields)
+      end
+
+      def unquote(name_opts)() do
+        unquote(opts)
+      end
+
       def unquote(name)(overrides \\ %{}, havings \\ %{}) do
-        @new_function.(unquote(fields),
+        @new_function.(unquote(name_attributes)(),
                        Dict.merge(overrides, havings),
                        __MODULE__,
-                       unquote(opts))
+                       unquote(name_opts)())
       end
 
       def unquote(:"saved_#{name}")(repo, overrides \\ %{}, havings \\ %{}) do
         new_saved(repo,
-                  unquote(fields),
+                  unquote(name_attributes)(),
                   Dict.merge(overrides, havings),
                   __MODULE__,
-                  unquote(opts),
-                  (@save_one_function || &Blacksmith.saved/2),
+                  unquote(name_opts)(),
+                  @save_one_function,
                   @new_function)
       end
 
       def unquote(:"#{name}_list")(number_of_records, overrides \\ %{}, havings \\ %{}) do
         new_list(number_of_records,
-                 unquote(fields),
+                 &(unquote(Macro.var(name_attributes, nil))/0),
                  Dict.merge(overrides, havings),
                  __MODULE__,
-                 unquote(opts),
+                 unquote(name_opts)(),
                  @new_function)
       end
 
@@ -110,15 +121,15 @@ defmodule Blacksmith do
   end
 
   def saved(_map, _repo) do
-    raise "Save not configured. See readme.md for details. "
+    raise "Save not configured. See readme.md for details."
   end
 
-  def new_list(number_of_records, attributes, overrides, module, opts, new_function) do
-    Enum.map((1..number_of_records), &(new_function.(attributes, overrides, module, opts) || &1))
+  def new_list(number_of_records, attributes_fun, overrides, module, opts, new_function) do
+    Enum.map(1..number_of_records, fn _ -> new_function.(attributes_fun.(), overrides, module, opts) end)
   end
 
   def new_saved_list(_repo, _list) do
-    raise "Save not configured. See readme.md for details. "
+    raise "Save not configured. See readme.md for details."
   end
 
   def to_map(list) when is_list(list),
