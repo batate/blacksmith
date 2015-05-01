@@ -29,7 +29,7 @@ defp applications(_all),  do: [:logger]
 Next, tell Blacksmith how to save one record, or many records:
 
 ~~~elixir
-defmodule do Blacksmith.Config
+defmodule Blacksmith.Config do
   def save(repo, model) do
     repo |> save( model )
   end
