@@ -68,7 +68,9 @@ Now you can create a user, generating all of the default values:
 or a saved user, with the name attribute overridden, and a new attribute of favorite_language:
 
 ~~~elixir
-  user = Forge.saved_user Models.User, name: "Will Override", favorite_language: "Elixir"
+  user = Forge.saved_user Models.User, 
+                          name: "Will Override",
+                          favorite_language: "Elixir"
 ~~~
 
 or a list of 5 users
