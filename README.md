@@ -30,12 +30,12 @@ Next, tell Blacksmith how to save one record, or many records:
 
 ~~~elixir
 defmodule Blacksmith.Config do
-  def save(repo, model) do
-    repo |> save( model )
+  def save(model) do
+    MyRepo |> save(model)
   end
 
-  def save_all(repo, list_of_models) do
-    repo |> save_all( list_of_models )
+  def save_all(list_of_models) do
+    MyRepo |> save_all(list_of_models)
   end
 end
 ~~~
@@ -68,9 +68,9 @@ Now you can create a user, generating all of the default values:
 or a saved user, with the name attribute overridden, and a new attribute of favorite_language:
 
 ~~~elixir
-  user = Forge.saved_user Models.User, 
-                          name: "Will Override",
-                          favorite_language: "Elixir"
+  user = Forge.saved_user
+           name: "Will Override",
+           favorite_language: "Elixir"
 ~~~
 
 or a list of 5 users
@@ -116,8 +116,8 @@ The `@save_one_function` and `@save_all_function` attributes are used to delegat
 defmodule Forge do
   use Blacksmith
 
-  @save_one_function &Blacksmith.Config.save/2
-  @save_all_function &Blacksmith.Config.save_all/2
+  @save_one_function &Blacksmith.Config.save/1
+  @save_all_function &Blacksmith.Config.save_all/1
 
   register :user, %User{
     name: "John Henry",
@@ -130,14 +130,14 @@ end
 
 ~~~elixir
 defmodule Blacksmith.Config do
-  def save(repo, map) do
-    repo.insert(map)
+  def save(map) do
+    MyRepo.insert(map)
   end
 
-  def save_all(repo, list) do
-    Enum.map(list, &repo.insert/1)
+  def save_all(list) do
+    Enum.map(list, &MyRepo.insert/1)
   end
 end
 ~~~
 
-`Forge.saved_user(MyRepo)` will generate a `User` model that have been inserted in the database backed by `MyRepo`.
+`Forge.saved_user` will generate a `User` model that have been inserted in the database backed by `MyRepo`.

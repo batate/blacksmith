@@ -6,8 +6,8 @@ defmodule Blacksmith do
       @default_type :struct
 
       @new_function &Blacksmith.new/4
-      @save_one_function &Blacksmith.saved/2
-      @save_all_function &Blacksmith.new_saved_list/2
+      @save_one_function &Blacksmith.saved/1
+      @save_all_function &Blacksmith.new_saved_list/1
 
       # Allow a common set of arguments
       defmacro having(opts, [do: block]) do
@@ -69,9 +69,8 @@ defmodule Blacksmith do
                        unquote(name_opts)())
       end
 
-      def unquote(:"saved_#{name}")(repo, overrides \\ %{}, havings \\ %{}) do
-        new_saved(repo,
-                  unquote(name_attributes)(),
+      def unquote(:"saved_#{name}")(overrides \\ %{}, havings \\ %{}) do
+        new_saved(unquote(name_attributes)(),
                   Dict.merge(overrides, havings),
                   __MODULE__,
                   unquote(name_opts)(),
@@ -88,9 +87,9 @@ defmodule Blacksmith do
                  @new_function)
       end
 
-      def unquote(:"saved_#{name}_list")(repo, number_of_records, overrides \\ %{}, havings \\ %{}) do
+      def unquote(:"saved_#{name}_list")(number_of_records, overrides \\ %{}, havings \\ %{}) do
         list = unquote(:"#{name}_list")(number_of_records, overrides, havings)
-        @save_all_function.( repo, list )
+        @save_all_function.(list)
       end
     end
   end
@@ -114,12 +113,12 @@ defmodule Blacksmith do
     |> Map.merge(to_map(overrides))
   end
 
-  def new_saved(repo, attributes, overrides, module, opts, save_function, new_function) do
+  def new_saved(attributes, overrides, module, opts, save_function, new_function) do
     model = new_function.(attributes, overrides, module, opts)
-    save_function.(repo, model)
+    save_function.(model)
   end
 
-  def saved(_map, _repo) do
+  def saved(_map) do
     raise "Save not configured. See readme.md for details."
   end
 
@@ -127,7 +126,7 @@ defmodule Blacksmith do
     Enum.map(1..number_of_records, fn _ -> new_function.(attributes_fun.(), overrides, module, opts) end)
   end
 
-  def new_saved_list(_repo, _list) do
+  def new_saved_list(_list) do
     raise "Save not configured. See readme.md for details."
   end
 

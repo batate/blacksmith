@@ -1,6 +1,6 @@
 defmodule BlacksmithTest do
   use ExUnit.Case
-  use ShouldI, async: true
+  use ShouldI
   import ShouldI.Matchers.Context
   require Forge
 
@@ -64,10 +64,9 @@ defmodule BlacksmithTest do
 
   with "a persistent user and a persistent user list" do
     setup context do
-      repo = [:existing]
       assign context,
-        saved_user: Forge.saved_user( repo ),
-        saved_user_list: Forge.saved_user_list(repo, 2)
+        saved_user: Forge.saved_user,
+        saved_user_list: Forge.saved_user_list(2)
     end
 
     should_have_key :saved_user
