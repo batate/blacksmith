@@ -110,7 +110,7 @@ defmodule User do
 end
 ~~~
 
-The `@save_one_function` and `@save_all_function` attributes are used to delegate to your persistence layer. We delegate to `Blacksmith.Config` defined below. You'll also notice that we added the `__struct__` field to `register :user`, that's because Ecto works with models built on structs instead of plain maps.
+The `@save_one_function` and `@save_all_function` attributes are used to delegate to your persistence layer. We delegate to `Blacksmith.Config` defined below. You'll also notice that we directly create a struct in `register :user`, that's because Ecto works with models built on structs instead of plain maps.
 
 ~~~elixir
 defmodule Forge do
@@ -119,10 +119,10 @@ defmodule Forge do
   @save_one_function &Blacksmith.Config.save/2
   @save_all_function &Blacksmith.Config.save_all/2
 
-  register :user,
-    __struct__: User,
+  register :user, %User{
     name: "John Henry",
     email: Sequence.next(:email, &"jh#{&1}@example.com")
+  }
 end
 ~~~
 

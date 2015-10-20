@@ -97,22 +97,21 @@ defmodule Blacksmith do
 
   def new(attributes, overrides, module, opts) do
     if prototype = opts[:prototype] do
-      map = apply(module, prototype, [])
+      map = apply(module, prototype, []) |> to_map
     else
       map = %{}
     end
 
-    map = map
-          |> Map.merge(to_map(attributes))
-          |> Map.merge(to_map(overrides))
+    attributes = to_map(attributes)
+    overrides  = to_map(overrides)
 
-    case Map.fetch(map, :__struct__) do
-      {:ok, struct} ->
-        map = Map.delete(map, :__struct__)
-        struct(struct, map)
-      :error ->
-        map
+    if Map.has_key?(map, :__struct__) and Map.has_key?(attributes, :__struct__) do
+      raise "prototype and current record cannot both be structs"
     end
+
+    map
+    |> Map.merge(to_map(attributes))
+    |> Map.merge(to_map(overrides))
   end
 
   def new_saved(repo, attributes, overrides, module, opts, save_function, new_function) do
