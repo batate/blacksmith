@@ -3,7 +3,7 @@ defmodule Blacksmith.Mixfile do
 
   def project do
     [app: :blacksmith,
-     version: "0.1.3",
+     version: "0.2.0",
      elixir: "~> 1.0",
      deps: deps,
      name: "Blacksmith",
@@ -29,7 +29,7 @@ defmodule Blacksmith.Mixfile do
   end
 
   defp deps do
-    [{:faker, "~> 0.5"},
+    [{:faker, "~> 0.6"},
      {:ex_doc, only: :dev},
      {:earmark, only: :dev},
      {:shouldi, only: :test}]
