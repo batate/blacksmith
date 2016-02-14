@@ -32,6 +32,6 @@ defmodule Blacksmith.Mixfile do
     [{:faker, "~> 0.6"},
      {:ex_doc, only: :dev},
      {:earmark, only: :dev},
-     {:shouldi, only: :test}]
+     {:shouldi, ">= 0.3.0", only: :test}]
   end
 end
