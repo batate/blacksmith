@@ -29,7 +29,7 @@ defmodule Blacksmith.SequenceTest do
     assert "foo #{start+1}" == Sequence.next(&"foo #{&1}")
   end
 
-  with "a forge" do
+  having "a forge" do
     setup context do
       assign context,
         start: Sequence.next(:email),

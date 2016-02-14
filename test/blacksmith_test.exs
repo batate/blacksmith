@@ -4,7 +4,7 @@ defmodule BlacksmithTest do
   import ShouldI.Matchers.Context
   require Forge
 
-  with "a direct map and a prototype" do
+  having "a direct map and a prototype" do
     setup context do
       assign context,
         user: Forge.user,
@@ -22,7 +22,7 @@ defmodule BlacksmithTest do
     end
   end
 
-  with "optional args" do
+  having "optional args" do
     setup context do
       assign context,
         user: Forge.user( job: "Iron worker" ),
@@ -33,7 +33,7 @@ defmodule BlacksmithTest do
     should_match_key extra_arg_user: %{job: "Steel driver"}
   end
 
-  with "having args" do
+  having "having args" do
     setup context do
       Forge.having job: "Steel driver" do
         context = assign context, user1: Forge.user
@@ -48,7 +48,7 @@ defmodule BlacksmithTest do
     should_match_key user2: %{city: "Austin"}
   end
 
-  # with "nested having args" do
+  # having "nested having args" do
   #   setup context do
   #     Forge.having( tool: "hammer" ) do
   #       Forge.having( job: "Steel driver" ) do
@@ -62,7 +62,7 @@ defmodule BlacksmithTest do
   #   should_match_key user: %{tool: "hammer"}
   # end
 
-  with "a persistent user and a persistent user list" do
+  having "a persistent user and a persistent user list" do
     setup context do
       assign context,
         saved_user: Forge.saved_user,
