@@ -95,10 +95,10 @@ defmodule Blacksmith do
   end
 
   def new(attributes, overrides, module, opts) do
-    if prototype = opts[:prototype] do
-      map = apply(module, prototype, []) |> to_map
+    map = if (prototype = opts[:prototype]) do
+      apply(module, prototype, []) |> to_map
     else
-      map = %{}
+      %{}
     end
 
     attributes = to_map(attributes)
