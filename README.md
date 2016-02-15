@@ -54,7 +54,7 @@ defmodule Forge do
 
   # this will create a user with roles set to [:admin]
   register :admin,
-    [prototype: user],
+    [prototype: :user],
     roles: ["admin"]
 end
 ~~~
