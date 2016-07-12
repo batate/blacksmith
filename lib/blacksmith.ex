@@ -1,7 +1,7 @@
 defmodule Blacksmith do
   defmacro __using__(_) do
     quote do
-      import Blacksmith
+      import Blacksmith, except: [having: 2]
       alias Blacksmith.Sequence
       @default_type :struct
 
@@ -9,35 +9,9 @@ defmodule Blacksmith do
       @save_one_function &Blacksmith.saved/1
       @save_all_function &Blacksmith.new_saved_list/1
 
-      # Allow a common set of arguments
-      defmacro having(opts, [do: block]) do
-        opts_var = quote do: opts_var
-
-        block =
-          Macro.prewalk(block, fn
-            {{:., _, [{:__aliases__, _, _}, :having]}, _, _} = ast ->
-              ast
-            {{:., _, [{:__aliases__, _, _} = alias, _]} = function, meta3, args} = ast ->
-              if Macro.expand(alias, __CALLER__) == __MODULE__ do
-                {function, meta3, args ++ [opts_var]}
-              else
-                ast
-              end
-            ast ->
-              ast
-          end)
-
-        var_defined? = {:opts_var, __MODULE__} in __CALLER__.vars
-        opts = Blacksmith.append_opts(opts_var, var_defined?, opts)
-
-        quote do
-          opts_var = unquote(opts)
-          context = unquote(block)
-          opts_var = []
-          context
-        end
+      defmacro having(opts, block) do
+        Blacksmith.having(opts, block, __ENV__, __CALLER__)
       end
-
     end
   end
 
@@ -47,6 +21,35 @@ defmodule Blacksmith do
 
   def append_opts(_, false, new_opts) do
     new_opts
+  end
+
+  # Allow a common set of arguments
+  def having(opts, [do: block], env, caller) do
+    opts_var = quote do: opts_var
+
+    block =
+      Macro.prewalk(block, fn
+        {{:., _, [{:__aliases__, _, _}, :having]}, _, _} = ast ->
+          ast
+        {{:., _, [{:__aliases__, _, _} = alias, _]} = function, meta3, args} = ast ->
+        if Macro.expand(alias, caller) == env.module do
+          {function, meta3, args ++ [opts_var]}
+        else
+          ast
+        end
+        ast ->
+          ast
+      end)
+
+    var_defined? = {:opts_var, env.module} in caller.vars
+    opts = Blacksmith.append_opts(opts_var, var_defined?, opts)
+
+    quote do
+      opts_var = unquote(opts)
+      context = unquote(block)
+      opts_var = []
+      context
+    end
   end
 
   defmacro register(name, opts \\ [], fields) do
@@ -74,8 +77,8 @@ defmodule Blacksmith do
                   Dict.merge(overrides, havings),
                   __MODULE__,
                   unquote(name_opts)(),
-                  @save_one_function,
-                  @new_function)
+                  @new_function,
+                  @save_one_function)
       end
 
       def unquote(:"#{name}_list")(number_of_records, overrides \\ %{}, havings \\ %{}) do
@@ -113,17 +116,17 @@ defmodule Blacksmith do
     |> Map.merge(to_map(overrides))
   end
 
-  def new_saved(attributes, overrides, module, opts, save_function, new_function) do
-    model = new_function.(attributes, overrides, module, opts)
-    save_function.(model)
+  def new_saved(attributes, overrides, module, opts, new, save) do
+    model = new.(attributes, overrides, module, opts)
+    save.(model)
   end
 
   def saved(_map) do
     raise "Save not configured. See readme.md for details."
   end
 
-  def new_list(number_of_records, attributes_fun, overrides, module, opts, new_function) do
-    Enum.map(1..number_of_records, fn _ -> new_function.(attributes_fun.(), overrides, module, opts) end)
+  def new_list(number_of_records, attributes_fun, overrides, module, opts, new) do
+    Enum.map(1..number_of_records, fn _ -> new.(attributes_fun.(), overrides, module, opts) end)
   end
 
   def new_saved_list(_list) do
