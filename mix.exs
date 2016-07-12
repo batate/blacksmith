@@ -1,19 +1,18 @@
 defmodule Blacksmith.Mixfile do
   use Mix.Project
 
+  @version "0.2.0"
+
   def project do
     [app: :blacksmith,
-     version: "0.2.0",
+     version: @version,
      elixir: "~> 1.0",
-     deps: deps,
+     deps: deps(),
      name: "Blacksmith",
      source_url: "https://github.com/batate/blacksmith",
-     docs: fn ->
-       {ref, 0} = System.cmd("git", ["rev-parse", "--verify", "--quiet", "HEAD"])
-       [source_ref: ref, main: "README", readme: "README.md"]
-     end,
+     docs: docs(),
      description: "Elixir fake data generation for testing and development",
-     package: package]
+     package: package()]
   end
 
   def application do
@@ -28,10 +27,16 @@ defmodule Blacksmith.Mixfile do
      links: %{"Github" => "https://github.com/batate/blacksmith"}]
   end
 
+  defp docs do
+    [source_ref: "v" <> @version,
+     main: "README",
+     extras: ["README.md"]]
+  end
+
   defp deps do
     [{:faker, "~> 0.6"},
-     {:ex_doc, only: :dev},
-     {:earmark, only: :dev},
+     {:ex_doc, ">= 0.0.0", only: :dev},
+     {:earmark, ">= 0.0.0", only: :dev},
      {:shouldi, ">= 0.3.0", only: :test}]
   end
 end

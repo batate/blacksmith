@@ -1,4 +1,5 @@
-ExUnit.start(formatters: [ShouldI.CLIFormatter])
+ExUnit.start()
+
 defmodule Forge do
   use Blacksmith
   @save_one_function &Blacksmith.Config.save/1
