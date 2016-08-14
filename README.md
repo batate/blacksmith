@@ -97,7 +97,7 @@ Next release: allow nesting of having blocks.
 
 ## Using with Ecto
 
-Blacksmith can be used easily with a database persistance library such as Ecto.
+Blacksmith can be used easily with a database persistence library such as Ecto.
 
 ~~~elixir
 defmodule User do
