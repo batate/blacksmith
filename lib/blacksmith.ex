@@ -67,14 +67,14 @@ defmodule Blacksmith do
 
       def unquote(name)(overrides \\ %{}, havings \\ %{}) do
         @new_function.(unquote(name_attributes)(),
-                       Dict.merge(overrides, havings),
+                       Blacksmith.merge(overrides, havings),
                        __MODULE__,
                        unquote(name_opts)())
       end
 
       def unquote(:"saved_#{name}")(overrides \\ %{}, havings \\ %{}) do
         new_saved(unquote(name_attributes)(),
-                  Dict.merge(overrides, havings),
+                  Blacksmith.merge(overrides, havings),
                   __MODULE__,
                   unquote(name_opts)(),
                   @new_function,
@@ -84,7 +84,7 @@ defmodule Blacksmith do
       def unquote(:"#{name}_list")(number_of_records, overrides \\ %{}, havings \\ %{}) do
         new_list(number_of_records,
                  &(unquote(Macro.var(name_attributes, nil))/0),
-                 Dict.merge(overrides, havings),
+                 Blacksmith.merge(overrides, havings),
                  __MODULE__,
                  unquote(name_opts)(),
                  @new_function)
@@ -98,7 +98,7 @@ defmodule Blacksmith do
   end
 
   def new(attributes, overrides, module, opts) do
-    map = if (prototype = opts[:prototype]) do
+    map = if prototype = opts[:prototype] do
       apply(module, prototype, []) |> to_map
     else
       %{}
@@ -112,8 +112,8 @@ defmodule Blacksmith do
     end
 
     map
-    |> Map.merge(to_map(attributes))
-    |> Map.merge(to_map(overrides))
+    |> Map.merge(attributes)
+    |> Map.merge(overrides)
   end
 
   def new_saved(attributes, overrides, module, opts, new, save) do
@@ -137,4 +137,8 @@ defmodule Blacksmith do
     do: Enum.into(list, %{})
   def to_map(map) when is_map(map),
     do: map
+
+  def merge(left, right) do
+    Map.merge(to_map(left), to_map(right))
+  end
 end

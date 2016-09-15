@@ -38,7 +38,7 @@ defmodule Blacksmith.Sequence do
   """
 
   @doc false
-  def start_link, do: Agent.start_link(&HashDict.new/0, name: __MODULE__)
+  def start_link, do: Agent.start_link(&Map.new/0, name: __MODULE__)
 
   @doc "Generate the default sequence (:default)"
   def next, do: next(:default)
@@ -49,8 +49,8 @@ defmodule Blacksmith.Sequence do
   @doc "Generate a named sequence"
   def next(name) do
     Agent.get_and_update __MODULE__, fn(seqs) ->
-      current = HashDict.get(seqs, name, 0)
-      next    = HashDict.put(seqs, name, current + 1)
+      current = Map.get(seqs, name, 0)
+      next    = Map.put(seqs, name, current + 1)
       {current, next}
     end
   end

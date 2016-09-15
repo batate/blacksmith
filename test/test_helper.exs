@@ -29,9 +29,12 @@ defmodule Blacksmith.Config do
   def save(map), do: map
   def save_all(map_list), do: map_list
   def new_json(attributes, overrides) do
+    attributes = Blacksmith.to_map(attributes)
+    overrides = Blacksmith.to_map(overrides)
+
     %{}
-    |> Dict.merge(Dict.delete(attributes, :type))
-    |> Dict.merge(overrides)
+    |> Map.merge(Map.delete(attributes, :type))
+    |> Map.merge(overrides)
     |> Poison.Encoder.encode([])
   end
 
