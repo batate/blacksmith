@@ -34,7 +34,7 @@ defmodule Blacksmith.Mixfile do
   end
 
   defp deps do
-    [{:faker, "~> 0.6"},
+    [{:faker, "~> 0.7"},
      {:ex_doc, ">= 0.0.0", only: :dev},
      {:earmark, ">= 0.0.0", only: :dev},
      {:shouldi, ">= 0.3.0", only: :test}]
