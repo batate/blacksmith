@@ -11,7 +11,7 @@ In your mix.exs file, add the blacksmith dependency:
 
 ~~~elixir
 def deps do
-  [{:blacksmith, "~> 0.1"}]
+  [{:blacksmith, "~> 0.1.2"}]
 end
 ~~~
 
