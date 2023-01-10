@@ -41,7 +41,7 @@ defmodule Blacksmith do
           ast
       end)
 
-    var_defined? = {:opts_var, env.module} in caller.vars
+    var_defined? = {:opts_var, env.module} in Macro.Env.vars(caller)
     opts = Blacksmith.append_opts(opts_var, var_defined?, opts)
 
     quote do
